@@ -68,9 +68,7 @@ public class JobHealthReport {
         JenkinsJobApi jobApi = new JenkinsJobApi(fullUrl);
         int lastCompletedBuild = Integer.parseInt(jobApi.getLastCompletedBuild());
         int firstBuild = Integer.parseInt(jobApi.getFirstBuild());
-        //buildLimit = 2;
         int startingBuild = lastCompletedBuild - buildLimit + 1;
-
 
 
         for (int currentBuild = startingBuild; currentBuild <= lastCompletedBuild; currentBuild++) {
