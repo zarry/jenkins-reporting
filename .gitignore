@@ -4,3 +4,8 @@
 
 # Package Files #
 *.jar
+
+# IDE #
+.idea
+.iml
+.idea/
