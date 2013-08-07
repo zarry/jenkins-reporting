@@ -13,10 +13,10 @@ import java.util.List;
  * Time: 1:45 PM
  */
 
-public class JenkinsBuildNumberApi extends JenkinsApi implements IApi{
+public class JenkinsBuildApi extends JenkinsApi implements IApi{
     private Document dom;
 
-    public JenkinsBuildNumberApi(String rootJobUrl, String buildNumber) {
+    public JenkinsBuildApi(String rootJobUrl, String buildNumber) {
      String jobNumberUrl = rootJobUrl + buildNumber + "/api/xml";
 
      this.dom = getDom(createUrl(jobNumberUrl));

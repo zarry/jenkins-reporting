@@ -75,14 +75,14 @@ public class JobHealthReport {
             String currentBuildNumber = ((Integer) currentBuild).toString();
             JenkinsBuildBean build = new JenkinsBuildBean();
             TestNgResultsJobApi resultsApi = new TestNgResultsJobApi(fullUrl, currentBuildNumber );
-            JenkinsBuildNumberApi jobNumApi = new JenkinsBuildNumberApi(fullUrl, currentBuildNumber);
+            JenkinsBuildApi jobNumApi = new JenkinsBuildApi(fullUrl, currentBuildNumber);
 
 
             build.setBuildNumber(currentBuildNumber);
             build.setDuration(jobNumApi.getDuration());
             build.setFailedTestCount(resultsApi.getFailTestCount());
             build.setTotalTestCount(resultsApi.getTotalTestCount());
-            build.setTime(rw.convertEpoch(jobNumApi.getTimeStamp()));
+            build.setTimestamp(rw.convertEpoch(jobNumApi.getTimeStamp()));
 
             buildList.add(build);
 
@@ -103,7 +103,7 @@ public class JobHealthReport {
                         buildList.get(j).getFailedTestCount(),
                         buildList.get(j).getTotalTestCount(),
                         buildList.get(j).getDuration(),
-                        buildList.get(j).getTime());
+                        buildList.get(j).getTimestamp());
             }
             rw.flushFile();
         } catch (Exception e) {

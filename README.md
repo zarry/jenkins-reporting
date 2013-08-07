@@ -17,6 +17,7 @@ Write Everything...
 
 To be just a tiny bit more specific.
 
+* Documentation
 * ReportWriter needs to be (re)written.  
 * More access to the API
 * More pre-made/sample reports
