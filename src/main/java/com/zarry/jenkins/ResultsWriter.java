@@ -5,10 +5,7 @@ package com.zarry.jenkins;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.io.File;
 import java.io.BufferedWriter;
@@ -23,6 +20,7 @@ public class ResultsWriter {
     private boolean writeToFile = false;
     private String fileName;
     private BufferedWriter bw;
+    private ArrayList<Integer> columnWidth;
 
     public ResultsWriter(){
 
@@ -67,6 +65,18 @@ public class ResultsWriter {
     }
 
 
+    public void writeGenericHeader(LinkedHashMap<String, Integer> columns){
+        ArrayList<String> column = new ArrayList<String>(0);
+        ArrayList<Integer> width = new ArrayList<Integer>(0);
+        for(String c : columns.keySet()){
+            column.add(c);
+            width.add(columns.get(c));
+        }
+
+        writeGenericHeader(column,width);
+
+    }
+
     public void writeGenericHeader(ArrayList<String> column){
         writeGenericHeader(column, new ArrayList<Integer>(0));
     }
@@ -76,12 +86,21 @@ public class ResultsWriter {
              width = getHeaderColumnWidths(column);
          }
 
+        for(int i =0; i < column.size(); i++){
+            if(width.get(i) == 0){
+                width.set(i,calcColumnWidth(column.get(i), 2));
+            }
+        }
+
+
+        columnWidth = width;
+
         StringBuilder headerColumnBuilder = new StringBuilder();
         StringBuilder headerLineBuilder = new StringBuilder();
         StringBuilder line = new StringBuilder();
 
         for(Integer j = 0; j < column.size(); j++){
-            Integer columnBuffer = (width.get(j) - column.get(j).length()) / 2;
+            Integer columnBuffer = (columnWidth.get(j) - column.get(j).length()) / 2;
             StringBuilder buffer = new StringBuilder();
             StringBuilder lineBuffer = new StringBuilder();
 
@@ -108,20 +127,25 @@ public class ResultsWriter {
 
         System.out.format(NEWLINE);
         System.out.println(headerColumnBuilder.append("|").toString());
-        System.out.println(line.append("|").toString());
+        System.out.println(line.append("+").toString());
     }
 
     private ArrayList<Integer> getHeaderColumnWidths(ArrayList<String> column){
+        return getHeaderColumnWidths(column, 2);
+    }
+
+    private ArrayList<Integer> getHeaderColumnWidths(ArrayList<String> column, int cushion){
         ArrayList<Integer> width = new ArrayList<Integer>(0);
-        int coulmnCount = column.size();
-        int cushion = 2;
 
         for(Integer j = 0; j < column.size(); j++){
-            int columnWidth = column.get(j).length();
-            columnWidth += cushion + cushion;
-            width.add(j, columnWidth);
+            width.add(j, calcColumnWidth(column.get(j),cushion));
         }
         return width;
+    }
+
+    private Integer calcColumnWidth(String columnText, int cushion){
+        int columnWidth = columnText.length();
+        return columnWidth += cushion + cushion;
     }
 
     public void writerJobInfo(String ciServerUrl, String ciJob){
