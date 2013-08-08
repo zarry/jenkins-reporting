@@ -5,6 +5,7 @@ package com.zarry.jenkins;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -63,6 +64,64 @@ public class ResultsWriter {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    public void writeGenericHeader(ArrayList<String> column){
+        writeGenericHeader(column, new ArrayList<Integer>(0));
+    }
+
+    public void writeGenericHeader(ArrayList<String> column, ArrayList<Integer> width){
+        if (width.size() == 0){
+             width = getHeaderColumnWidths(column);
+         }
+
+        StringBuilder headerColumnBuilder = new StringBuilder();
+        StringBuilder headerLineBuilder = new StringBuilder();
+        StringBuilder line = new StringBuilder();
+
+        for(Integer j = 0; j < column.size(); j++){
+            Integer columnBuffer = (width.get(j) - column.get(j).length()) / 2;
+            StringBuilder buffer = new StringBuilder();
+            StringBuilder lineBuffer = new StringBuilder();
+
+            for(int k = 0; k < columnBuffer; k++){
+                buffer.append(" ");
+                lineBuffer.append("-");
+            }
+
+            headerColumnBuilder
+                    .append("|")
+                    .append(buffer)
+                    .append(column.get(j))
+                    .append(buffer);
+
+            String underLine = "";
+            for(int i = 0; i < column.get(j).length(); i++){
+                underLine += "-";
+
+            }
+
+            line.append("+").append(lineBuffer).append(underLine).append(lineBuffer);
+
+        }
+
+        System.out.format(NEWLINE);
+        System.out.println(headerColumnBuilder.append("|").toString());
+        System.out.println(line.append("|").toString());
+    }
+
+    private ArrayList<Integer> getHeaderColumnWidths(ArrayList<String> column){
+        ArrayList<Integer> width = new ArrayList<Integer>(0);
+        int coulmnCount = column.size();
+        int cushion = 2;
+
+        for(Integer j = 0; j < column.size(); j++){
+            int columnWidth = column.get(j).length();
+            columnWidth += cushion + cushion;
+            width.add(j, columnWidth);
+        }
+        return width;
     }
 
     public void writerJobInfo(String ciServerUrl, String ciJob){
