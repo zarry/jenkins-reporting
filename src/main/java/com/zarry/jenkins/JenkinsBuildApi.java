@@ -2,7 +2,6 @@ package com.zarry.jenkins;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
-import org.dom4j.Node;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,13 +12,19 @@ import java.util.List;
  * Time: 1:45 PM
  */
 
-public class JenkinsBuildApi extends JenkinsApi implements IApi{
+public class JenkinsBuildApi extends JenkinsApi implements Api {
     private Document dom;
+    private String rootJobUrl;
+    private String buildNumber;
 
     public JenkinsBuildApi(String rootJobUrl, String buildNumber) {
-     String jobNumberUrl = rootJobUrl + buildNumber + "/api/xml";
+        this.rootJobUrl = rootJobUrl;
+        this.buildNumber = buildNumber;
+        this.dom = getDom(createUrl(constructUrlString()));
+    }
 
-     this.dom = getDom(createUrl(jobNumberUrl));
+    public String constructUrlString() {
+        return rootJobUrl + buildNumber + "/" + APIXML;
     }
 
     public String getDuration() {

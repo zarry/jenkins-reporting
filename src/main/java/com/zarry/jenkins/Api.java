@@ -8,13 +8,14 @@ import java.net.URL;
  * Date: 8/3/13
  * Time: 2:53 PM
  */
-public interface IApi {
-    Document dom = null;
-    URL url = null;
+public interface Api {
+    static final String APIXML = "api/xml";
 
     public Document getDom(URL url);
 
     public URL createUrl (String urlString);
+
+    public String constructUrlString ();
 
 
 }

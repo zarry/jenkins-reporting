@@ -8,13 +8,17 @@ import org.dom4j.Document;
  * Time: 1:45 PM
  */
 
-public class JenkinsJobApi extends JenkinsApi {
-    public Document dom;
+public class JenkinsJobApi extends JenkinsApi implements Api {
+    private Document dom;
+    private String rootJobUrl;
 
     public JenkinsJobApi(String rootJobUrl) {
-        String jobUrl = rootJobUrl + "api/xml";
+        this.rootJobUrl = rootJobUrl;
+        this.dom = getDom(createUrl(constructUrlString()));
+    }
 
-        this.dom = getDom(createUrl(jobUrl));
+    public String constructUrlString(){
+        return rootJobUrl + APIXML;
     }
 
     public String getLastCompletedBuild() {

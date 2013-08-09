@@ -8,44 +8,36 @@ import org.dom4j.Document;
  * Time: 1:45 PM
  */
 
-public class TestNgResultsJobApi extends JenkinsApi {
-    String failedTestCount;
-    String totalTestCount;
+public class TestNgResultsJobApi extends JenkinsApi implements Api {
+    private String buildNumber;
+    private String rootJobUrl;
+    private String testNgResults = "testngreports";
     private Document dom;
 
     public TestNgResultsJobApi(String rootJobUrl, String buildNumber) {
-        String testNgResults = "testngreports/api/xml";
-        String testngUrl = rootJobUrl + buildNumber + "/" + testNgResults;
-
-        setData(getDom(createUrl(testngUrl)));
-
+        this.buildNumber = buildNumber;
+        this.rootJobUrl = rootJobUrl;
+        this.dom = getDom(createUrl(constructUrlString()));
     }
 
-    private void setData(Document dom) {
-        if (dom == null){
-            setFailedTestCount("-");
-            setTotalTestCount("-");
-        }else{
-            setFailedTestCount(dom.getRootElement().elementText("fail"));
-            setTotalTestCount(dom.getRootElement().elementText("total"));
-        }
+    public String constructUrlString(){
+        return  rootJobUrl + buildNumber + "/" + testNgResults + "/" + APIXML;
     }
 
     public String getFailTestCount() {
-        return this.failedTestCount;
+        return accessDomRootElement("fail");
     }
 
     public String getTotalTestCount() {
-        return this.totalTestCount;
+        return accessDomRootElement("total");
     }
 
-    public void setFailedTestCount(String failedTestCount) {
-        this.failedTestCount = failedTestCount;
+    private String accessDomRootElement(String elementText){
+        if(dom == null){
+            return "-";
+        }else{
+            return dom.getRootElement().elementText(elementText);
+        }
     }
-
-    public void setTotalTestCount(String totalTestCount) {
-        this.totalTestCount = totalTestCount;
-    }
-
 
 }
