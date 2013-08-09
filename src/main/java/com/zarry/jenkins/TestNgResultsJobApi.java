@@ -11,7 +11,7 @@ import org.dom4j.Document;
 public class TestNgResultsJobApi extends JenkinsApi implements Api {
     private String buildNumber;
     private String rootJobUrl;
-    private String testNgResults = "testngreports";
+    private static final String TEST_NG_RESULTS = "testngreports";
     private Document dom;
 
     public TestNgResultsJobApi(String rootJobUrl, String buildNumber) {
@@ -21,7 +21,7 @@ public class TestNgResultsJobApi extends JenkinsApi implements Api {
     }
 
     public String constructUrlString(){
-        return  rootJobUrl + buildNumber + "/" + testNgResults + "/" + APIXML;
+        return  rootJobUrl + buildNumber + "/" + TEST_NG_RESULTS + "/" + APIXML;
     }
 
     public String getFailTestCount() {
