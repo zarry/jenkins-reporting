@@ -4,6 +4,7 @@ import com.zarry.jenkins.*;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -62,8 +63,7 @@ public class JobHealthReport {
     }
 
     private void gatherData(){
-        String encodedJob = encodeStringForUrl(job);
-        String fullUrl = buildUrl(serverRoot, encodedJob);
+        String fullUrl = buildUrl(serverRoot, encodeStringForUrl(job));
 
         JenkinsJobApi jobApi = new JenkinsJobApi(fullUrl);
         int lastCompletedBuild = Integer.parseInt(jobApi.getLastCompletedBuild());
@@ -92,10 +92,17 @@ public class JobHealthReport {
 
 
     private void writeReport(String serverRoot, String job){
+        LinkedHashMap<String, Integer> columns = new LinkedHashMap<String, Integer>(0);
+        columns.put("Build",0);
+        columns.put("Failed Test Count",0);
+        columns.put("Total Test Count",0);
+        columns.put("Total Duration",0);
+        columns.put("Date",16);
+
         try{
             rw.writerJobInfo(serverRoot,job);
 
-            rw.writerTableHeader();
+            rw.writeGenericHeader(columns);
 
             for(int j = buildList.size() - 1; j >= 0; j--){
                 rw.writeReportRow(

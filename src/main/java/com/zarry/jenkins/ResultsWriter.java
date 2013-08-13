@@ -21,6 +21,9 @@ public class ResultsWriter {
     private String fileName;
     private BufferedWriter bw;
     private ArrayList<Integer> columnWidth;
+    private LinkedHashMap<String,Integer> headerAndColumnWidth;
+    private int autoSizeHeaderBuffer = 2;
+
 
     public ResultsWriter(){
 
@@ -45,62 +48,23 @@ public class ResultsWriter {
         }
     }
 
-    public void writerTableHeader(){
-        String line = "-";
-        while(line.length() < 30){
-            line += "-";
-        }
-        System.out.format(NEWLINE);
-        System.out.printf("|  Build  |  Failed Test Count  |  Total Test Count  |  Total Duration  |      Date      |" + NEWLINE);
-        System.out.format("+---------+---------------------+--------------------+------------------+----------------+" + NEWLINE);
-        if (writeToFile){
-            try{
-                bw.newLine();
-                bw.write("|  Build  |  Failed Test Count  |  Total Test Count  |  Total Duration  |"); bw.newLine();
-                bw.write("+---------+---------------------+--------------------+------------------+"); bw.newLine();
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+    private void updateColumnWidthWhenAutoSized(){
+        for(String key : headerAndColumnWidth.keySet()){
+             if(headerAndColumnWidth.get(key) == 0){
+                headerAndColumnWidth.put(key, calcColumnWidth(key, autoSizeHeaderBuffer));
+             }
         }
     }
-
 
     public void writeGenericHeader(LinkedHashMap<String, Integer> columns){
-        ArrayList<String> column = new ArrayList<String>(0);
-        ArrayList<Integer> width = new ArrayList<Integer>(0);
-        for(String c : columns.keySet()){
-            column.add(c);
-            width.add(columns.get(c));
-        }
-
-        writeGenericHeader(column,width);
-
-    }
-
-    public void writeGenericHeader(ArrayList<String> column){
-        writeGenericHeader(column, new ArrayList<Integer>(0));
-    }
-
-    public void writeGenericHeader(ArrayList<String> column, ArrayList<Integer> width){
-        if (width.size() == 0){
-             width = getHeaderColumnWidths(column);
-         }
-
-        for(int i =0; i < column.size(); i++){
-            if(width.get(i) == 0){
-                width.set(i,calcColumnWidth(column.get(i), 2));
-            }
-        }
-
-
-        columnWidth = width;
+        headerAndColumnWidth = columns;
+        updateColumnWidthWhenAutoSized();
 
         StringBuilder headerColumnBuilder = new StringBuilder();
-        StringBuilder headerLineBuilder = new StringBuilder();
         StringBuilder line = new StringBuilder();
 
-        for(Integer j = 0; j < column.size(); j++){
-            Integer columnBuffer = (columnWidth.get(j) - column.get(j).length()) / 2;
+        for(String columnText : headerAndColumnWidth.keySet()){
+            Integer columnBuffer = getColumnBuffer(headerAndColumnWidth.get(columnText), columnText);
             StringBuilder buffer = new StringBuilder();
             StringBuilder lineBuffer = new StringBuilder();
 
@@ -112,22 +76,33 @@ public class ResultsWriter {
             headerColumnBuilder
                     .append("|")
                     .append(buffer)
-                    .append(column.get(j))
+                    .append(columnText)
                     .append(buffer);
 
-            String underLine = "";
-            for(int i = 0; i < column.get(j).length(); i++){
-                underLine += "-";
-
-            }
-
-            line.append("+").append(lineBuffer).append(underLine).append(lineBuffer);
-
+            line
+                .append("+")
+                .append(lineBuffer)
+                .append(buildLineUnderColumnHeader(columnText))
+                .append(lineBuffer);
         }
 
         System.out.format(NEWLINE);
         System.out.println(headerColumnBuilder.append("|").toString());
         System.out.println(line.append("+").toString());
+
+    }
+
+    private Integer getColumnBuffer(Integer width, String text){
+        return (width - text.length()) / 2;
+
+    }
+
+    private String buildLineUnderColumnHeader(String columnText){
+        String underLine = "";
+        for(int i = 0; i < columnText.length(); i++){
+            underLine += "-";
+        }
+        return underLine;
     }
 
     private ArrayList<Integer> getHeaderColumnWidths(ArrayList<String> column){
@@ -215,4 +190,7 @@ public class ResultsWriter {
     }
 
 
+    public void setAutoSizeHeaderBuffer(int autoSizeHeaderBuffer) {
+        this.autoSizeHeaderBuffer = autoSizeHeaderBuffer;
+    }
 }
