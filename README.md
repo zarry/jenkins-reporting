@@ -35,7 +35,7 @@ JobHealthReport.bat -url `<url>` -job `<jobName>` -buildLimit `<maxBuildLimit>`
 
 
 ```
-> JobHealthReport.bat -url "http://qatools02:8080" -job "Default Trunk - D - Batch - Run 1" -buildLimit 10
+> JobHealthReport.bat -url "http://jenkinsci:8080" -job "Default Trunk - Run 1" -buildLimit 10
 
 ```
 
@@ -47,9 +47,9 @@ JobHealthReport.bat -url `<url>` -job `<jobName>` -buildLimit `<maxBuildLimit>`
 A report document duration, testng test totals and failure counts along with relevant build and date information.
 
 ```
-Report Time:   2013/8/13  0:51 AM
-Jenkins CI:    http://qatools02:8080
-Job:           Default Trunk - D - Batch - Run 1
+Report Time:   2013/8/13  1:51 AM
+Jenkins CI:    http://jenkinsci:8080
+Job:           Default Trunk - Run 1
 
 |  Build  |  Failed Test Count  |  Total Test Count  |  Total Duration  |      Date      |
 +---------+---------------------+--------------------+------------------+----------------
