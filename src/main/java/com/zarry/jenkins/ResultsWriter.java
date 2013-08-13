@@ -23,6 +23,7 @@ public class ResultsWriter {
     private ArrayList<Integer> columnWidth;
     private LinkedHashMap<String,Integer> headerAndColumnWidth;
     private int autoSizeHeaderBuffer = 2;
+    StringBuilder lineBreak = new StringBuilder();
 
 
     public ResultsWriter(){
@@ -61,7 +62,7 @@ public class ResultsWriter {
         updateColumnWidthWhenAutoSized();
 
         StringBuilder headerColumnBuilder = new StringBuilder();
-        StringBuilder line = new StringBuilder();
+
 
         for(String columnText : headerAndColumnWidth.keySet()){
             Integer columnBuffer = getColumnBuffer(headerAndColumnWidth.get(columnText), columnText);
@@ -79,17 +80,35 @@ public class ResultsWriter {
                     .append(columnText)
                     .append(buffer);
 
-            line
-                .append("+")
-                .append(lineBuffer)
-                .append(buildLineUnderColumnHeader(columnText))
-                .append(lineBuffer);
+            buildLineBreak(lineBuffer, columnText);
+
+
         }
 
         System.out.format(NEWLINE);
         System.out.println(headerColumnBuilder.append("|").toString());
-        System.out.println(line.append("+").toString());
+        writeLineBreak();
 
+    }
+
+    private void buildLineBreak(StringBuilder lineBuffer, String columnText){
+        lineBreak
+                .append("+")
+                .append(lineBuffer)
+                .append(buildLineUnderColumnHeader(columnText))
+                .append(lineBuffer);
+    }
+
+    public void writeLineBreak(){
+        if(0 != lineBreak.length()){
+            System.out.println(lineBreak.toString());
+        }
+    }
+
+    public void writeLineBreak(String delim){
+        if(0 != lineBreak.length()){
+            System.out.println(lineBreak.toString().replace("+", delim));
+        }
     }
 
     private Integer getColumnBuffer(Integer width, String text){
@@ -153,6 +172,18 @@ public class ResultsWriter {
             }
         }
     }
+
+    public void writeReportRow(LinkedHashMap<String, String> headerAndRowValue){
+        String emptySpace = " ";
+        StringBuilder row = new StringBuilder();
+
+        for(String headerKey : headerAndRowValue.keySet()){
+            row.append(emptySpace).append(
+                    StringUtils.center(headerAndRowValue.get(headerKey), headerAndColumnWidth.get(headerKey)));
+        }
+        System.out.println(row.toString());
+    }
+
 
     public void writeReportRow(String build, String failedTestCount, String totalTestCount, String duration, Date time){
         String durationReadable = convertMilliSecToReadable(duration);
