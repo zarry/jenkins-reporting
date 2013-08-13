@@ -124,19 +124,6 @@ public class ResultsWriter {
         return underLine;
     }
 
-    private ArrayList<Integer> getHeaderColumnWidths(ArrayList<String> column){
-        return getHeaderColumnWidths(column, 2);
-    }
-
-    private ArrayList<Integer> getHeaderColumnWidths(ArrayList<String> column, int cushion){
-        ArrayList<Integer> width = new ArrayList<Integer>(0);
-
-        for(Integer j = 0; j < column.size(); j++){
-            width.add(j, calcColumnWidth(column.get(j),cushion));
-        }
-        return width;
-    }
-
     private Integer calcColumnWidth(String columnText, int cushion){
         int columnWidth = columnText.length();
         return columnWidth += cushion + cushion;
@@ -184,42 +171,17 @@ public class ResultsWriter {
         System.out.println(row.toString());
     }
 
-
-    public void writeReportRow(String build, String failedTestCount, String totalTestCount, String duration, Date time){
-        String durationReadable = convertMilliSecToReadable(duration);
-        String t = "\t\t";
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        String s = " ";
-
-        System.out.format("%1s%-9s%1s%-21s%1s%-20s%1s%-18s%1s%-16s%1s",
-                s,StringUtils.center(build, 9),
-                s,StringUtils.center(failedTestCount, 21),
-                s,StringUtils.center(totalTestCount, 20),
-                s,StringUtils.center(durationReadable, 18),
-                s,StringUtils.center(dateFormat.format(time), 16),s
-                + NEWLINE);
-        if (writeToFile){
-            try {
-                bw.write(build + t + failedTestCount + t + "\t" + totalTestCount + t + durationReadable); bw.newLine();
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
-
     public String convertMilliSecToReadable(String milliseconds){
         return String.format("%d h %d m",
                 TimeUnit.MILLISECONDS.toHours(Long.parseLong(milliseconds)),
                 TimeUnit.MILLISECONDS.toMinutes(Long.parseLong(milliseconds))-
                 TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(Long.parseLong(milliseconds)))
-
         );
     }
 
     public Date convertEpoch(String epochTime){
         return new java.util.Date(Long.parseLong(epochTime));
     }
-
 
     public void setAutoSizeHeaderBuffer(int autoSizeHeaderBuffer) {
         this.autoSizeHeaderBuffer = autoSizeHeaderBuffer;
