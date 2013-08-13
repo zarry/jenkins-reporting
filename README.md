@@ -31,18 +31,12 @@ To be just a tiny bit more specific.
 
 ## Running A Report
 
-> JobHealthReport.bat -url <url> -job <jobName> -buildLimit <maxBuildLimit>
+JobHealthReport.bat -url `<url>` -job `<jobName>` -buildLimit `<maxBuildLimit>`
 
 
 ```
 > JobHealthReport.bat -url "http://qatools02:8080" -job "Default Trunk - D - Batch - Run 1" -buildLimit 10
 
-```
-
-```
-function test() {
-  console.log("notice the blank line before this function?");
-}
 ```
 
 
