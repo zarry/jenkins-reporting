@@ -1,3 +1,3 @@
 
 
-java -classpath "./out/production/jenkins-api;lib/*"  com.zarry.jenkins.Reports.JobHealthReport -url "http://qatools02:8080" -job "Default Trunk - D - Batch - Run 1" -buildLimit 10
+java -cp ..\target\jenkins-reporting-1.0-SNAPSHOT-jar-with-dependencies.jar  com.zarry.jenkins.Reports.JobHealthReport %*
