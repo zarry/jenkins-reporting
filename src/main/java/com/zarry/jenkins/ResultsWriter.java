@@ -30,25 +30,6 @@ public class ResultsWriter {
 
     }
 
-    public void setFileName(String fn){
-        fileName = fn;
-        try{
-            writeToFile = true;
-            bw = new BufferedWriter(new FileWriter(new File(fileName)));
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public String getFileName(){return fileName;}
-    public void flushFile(){
-        try{
-            bw.flush();
-            bw.close();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
     private void updateColumnWidthWhenAutoSized(){
         for(String key : headerAndColumnWidth.keySet()){
              if(headerAndColumnWidth.get(key) == 0){
@@ -62,7 +43,6 @@ public class ResultsWriter {
         updateColumnWidthWhenAutoSized();
 
         StringBuilder headerColumnBuilder = new StringBuilder();
-
 
         for(String columnText : headerAndColumnWidth.keySet()){
             Integer columnBuffer = getColumnBuffer(headerAndColumnWidth.get(columnText), columnText);
@@ -81,8 +61,6 @@ public class ResultsWriter {
                     .append(buffer);
 
             buildLineBreak(lineBuffer, columnText);
-
-
         }
 
         System.out.format(NEWLINE);
@@ -101,13 +79,13 @@ public class ResultsWriter {
 
     public void writeLineBreak(){
         if(0 != lineBreak.length()){
-            System.out.println(lineBreak.toString());
+            System.out.println(lineBreak.append("+").toString());
         }
     }
 
     public void writeLineBreak(String delim){
         if(0 != lineBreak.length()){
-            System.out.println(lineBreak.toString().replace("+", delim));
+            System.out.println(lineBreak.append("+").toString().replace("+", delim));
         }
     }
 
@@ -130,34 +108,9 @@ public class ResultsWriter {
     }
 
     public void writerJobInfo(String ciServerUrl, String ciJob){
-        Calendar now = GregorianCalendar.getInstance();
-        int day = now.get(Calendar.DAY_OF_MONTH);
-        int month = now.get(Calendar.MONTH) + 1;
-        int year = now.get(Calendar.YEAR);
-        int hour = now.get(Calendar.HOUR);
-        int minute = now.get(Calendar.MINUTE);
-        String am_pm;
-        if(now.get(Calendar.AM_PM) == 0){
-            am_pm = "AM";
-        }
-        else{
-            am_pm = "PM";
-        }
-
         System.out.format(NEWLINE);
-        System.out.format("%-15s%s","Report Time: ", year + "/" + month + "/" + day + "  " + hour + ":" + minute + " " + am_pm + NEWLINE);
         System.out.format("%-15s%s","Jenkins CI: ", ciServerUrl + NEWLINE);
         System.out.format("%-15s%s","Job: ", ciJob + NEWLINE);
-        if (writeToFile){
-            try{
-                bw.newLine();
-                bw.write("Report Time:\t" + year + "/" + month + "/" + day + "  " + hour + ":" + minute + "\t" + am_pm + NEWLINE );
-                bw.write("Jenkins CI:\t" + ciServerUrl);  bw.newLine();
-                bw.write("Job:\t\t" + ciJob); bw.newLine();
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
     }
 
     public void writeReportRow(LinkedHashMap<String, String> headerAndRowValue){
@@ -183,7 +136,4 @@ public class ResultsWriter {
         return new java.util.Date(Long.parseLong(epochTime));
     }
 
-    public void setAutoSizeHeaderBuffer(int autoSizeHeaderBuffer) {
-        this.autoSizeHeaderBuffer = autoSizeHeaderBuffer;
-    }
 }

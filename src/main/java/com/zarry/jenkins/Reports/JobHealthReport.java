@@ -38,7 +38,6 @@ public class JobHealthReport {
     private static final String DATE_HEADER = "Date";
     private LinkedHashMap<String, Integer> columnHeaderAndWidth = new LinkedHashMap<String, Integer>();
 
-    public static void setFileWriter(String filename){rw.setFileName(filename);}
 
     public static void main(String[] args){
         new JobHealthReport().doMain(args);
@@ -48,10 +47,8 @@ public class JobHealthReport {
         setColumnHeaderAndWidth();
         parseArguments(args);
 
-        //setFileWriter(System.getProperty("user.dir") + "/" + job.replace(" ", "_") + ".txt");
         gatherData();
         writeReport(serverRoot, job);
-
     }
 
     private void gatherData(){
@@ -92,8 +89,6 @@ public class JobHealthReport {
             rw.writeLineBreak("-");
 
             writeAverageRow();
-
-            //rw.flushFile();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -148,8 +143,6 @@ public class JobHealthReport {
         }
         return sum / total;
     }
-
-
 
     private Integer getAverageTotalTest(){
         Integer sum = 0;
