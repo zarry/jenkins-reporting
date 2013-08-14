@@ -4,14 +4,12 @@ import com.zarry.jenkins.*;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.spi.DelimitedOptionHandler;
 
 /**
  * Author: lzarou
@@ -19,14 +17,21 @@ import org.kohsuke.args4j.Option;
  * Time: 7:03 PM
  */
 public class JobHealthReport {
-    @Option(name="-url",usage="Sets the root CI url")
+    @Option(name="-url",usage="URL root to Jenkins CI Server")
     private String serverRoot;
 
-    @Option(name="-job",usage="Sets the CI job")
-    private String job;
-
-    @Option(name="-buildLimit",usage="Sets the limit of builds to gather")
+    @Option(name="-buildLimit",usage="Number of builds to gather data for.")
     private int buildLimit;
+
+    private LinkedHashSet<String> jobs = new LinkedHashSet<String>();
+    @Option(name = "-job", metaVar = "\"job1,job2,jobN\"",
+            usage = "CI Job(s) to generate report for. Comma delimited for multiple jobs")
+    private void setJobs(final String job){
+        String[] alljobs = job.split(",");
+        for(String aJob : alljobs){
+            jobs.add(aJob);
+        }
+    }
 
     static ResultsWriter rw = new ResultsWriter();
     ArrayList <JenkinsBuildBean> buildList = new ArrayList<JenkinsBuildBean>(0);
@@ -47,11 +52,15 @@ public class JobHealthReport {
         setColumnHeaderAndWidth();
         parseArguments(args);
 
-        gatherData();
-        writeReport(serverRoot, job);
+        for(String job : jobs){
+            buildList = new ArrayList<JenkinsBuildBean>();
+            rw.flushLineBreak();
+            gatherData(serverRoot, job);
+            writeReport(serverRoot, job);
+        }
     }
 
-    private void gatherData(){
+    private void gatherData(String serverRoot, String job){
         String fullUrl = buildJobUrl(serverRoot, encodeStringForUrl(job));
 
         JenkinsJobApi jobApi = new JenkinsJobApi(fullUrl);
@@ -63,7 +72,6 @@ public class JobHealthReport {
             JenkinsBuildBean build = new JenkinsBuildBean();
             TestNgResultsJobApi resultsApi = new TestNgResultsJobApi(fullUrl, currentBuildNumber );
             JenkinsBuildApi jobNumApi = new JenkinsBuildApi(fullUrl, currentBuildNumber);
-
 
             build.setBuildNumber(currentBuildNumber);
             build.setDuration(jobNumApi.getDuration());
@@ -181,12 +189,13 @@ public class JobHealthReport {
                 throw new CmdLineException(parser,"No argument is given");
             }
         } catch( CmdLineException e ) {
+            System.err.println();
             System.err.println(e.getMessage());
             System.err.println("java JobHealthReport [options...] arguments...");
             parser.printUsage(System.err);
             System.err.println();
-            System.err.println("  Example: java JobHealthReport -url \"http://qatools02:8080\" -job \"Default Trunk - D - Batch - Run 1\" -buildLimit 2");
-            return;
+            System.err.println("  Example: java JobHealthReport -url \"http://qatools02:8080\" -job \"Default Trunk - D - Batch - Run 1\" -buildLimit 5");
+            System.exit(1);
         }
     }
 }

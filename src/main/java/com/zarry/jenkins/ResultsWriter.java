@@ -30,6 +30,10 @@ public class ResultsWriter {
 
     }
 
+    public void flushLineBreak(){
+        lineBreak = new StringBuilder();
+    }
+
     private void updateColumnWidthWhenAutoSized(){
         for(String key : headerAndColumnWidth.keySet()){
              if(headerAndColumnWidth.get(key) == 0){
