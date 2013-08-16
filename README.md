@@ -42,7 +42,7 @@ JobHealthReport.bat -url `<url>` -job `<jobName>` -buildLimit `<maxBuildLimit>`
 BranchComparisonReport.bat -url `<url>` -baseJob `<jobName>` -testJob `<jobName>`
 
 ```
-> BranchComparisonReport.bat -url "http://jenkinsci:8080" -baseJob "Default Trunk - F - Batch - Run 3" -testJob "August20Staging - F - Batch - Run 3"
+> BranchComparisonReport.bat -url "http://jenkinsci:8080" -baseJob "Default Trunk - Run 1" -testJob "AugustStaging - Run 1"
 
 ```
 
@@ -82,8 +82,8 @@ workstream to only provide those tests that are not failing globally.
 
 ```
 
-Tests failing in 'August20Staging - F - Batch - Run 3' that are not failing in 'Default Trunk - F - Batch - Run 3':
-        tests.batchapp.thdso.thdsoPoSpecTest
-        tests.batchapp.thdso.thdsoConfirmSpecTest
+Tests failing in 'AugustStaging - Run 1' that are not failing in 'Default Trunk - Run 1':
+        tests.specTest
+        tests.confirmTest
 
 ```
