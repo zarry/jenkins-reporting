@@ -68,7 +68,7 @@ public class BranchComparisonReport extends AbstractJenkinsReport {
 
         List<String> branchFailures = testFailedApi.getAllFailedTests();
 
-        System.out.println("\n\nTests failing in '" + testJob + "' that are not failing in '" + baseJob + "':");
+        System.out.println("\nTests failing in '" + testJob + "' that are not failing in '" + baseJob + "':");
         for (String failure : branchFailures) {
             if (!baseFailures.contains(failure)) {
                 System.out.println("\t" + failure);
