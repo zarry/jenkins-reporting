@@ -12,7 +12,7 @@ import java.net.URL;
  * Date: 7/18/13
  * Time: 7:49 PM
  */
-abstract class JenkinsApi implements Api {
+public abstract class JenkinsApi implements Api {
     private Document dom;
     private URL url;
 

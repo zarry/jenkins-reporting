@@ -1,22 +1,18 @@
 package com.zarry.jenkins.Reports;
 
 import com.zarry.jenkins.*;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import org.kohsuke.args4j.spi.DelimitedOptionHandler;
 
 /**
  * Author: lzarou
  * Date: 7/17/13
  * Time: 7:03 PM
  */
-public class JobHealthReport {
+public class JobHealthReport extends AbstractJenkinsReport{
     @Option(name="-url",usage="URL root to Jenkins CI Server")
     private String serverRoot;
 
@@ -45,20 +41,31 @@ public class JobHealthReport {
 
 
     public static void main(String[] args){
-        new JobHealthReport().doMain(args);
+        new JobHealthReport().runReport(args);
     }
-
-    public void doMain(String[] args){
-        setColumnHeaderAndWidth();
-        parseArguments(args);
-
-        for(String job : jobs){
+    
+    @Override
+	void setUp() {
+    	setColumnHeaderAndWidth();        
+	}
+    
+    private void setColumnHeaderAndWidth(){
+        columnHeaderAndWidth.put(BUILD_COLUMN_HEADER, 0);
+        columnHeaderAndWidth.put(FAILED_TEST_HEADER, 0);
+        columnHeaderAndWidth.put(TOTAL_TEST_HEADER, 0);
+        columnHeaderAndWidth.put(DURATION_HEADER, 0);
+        columnHeaderAndWidth.put(DATE_HEADER, 16);
+    }
+    
+    @Override
+	void executeReport() {
+    	for(String job : jobs){
             buildList = new ArrayList<JenkinsBuildBean>();
             rw.flushLineBreak();
             gatherData(serverRoot, job);
             writeReport(serverRoot, job);
         }
-    }
+	}
 
     private void gatherData(String serverRoot, String job){
         String fullUrl = buildJobUrl(serverRoot, encodeStringForUrl(job));
@@ -82,7 +89,7 @@ public class JobHealthReport {
             buildList.add(build);
         }
     }
-
+       
     private void writeReport(String serverRoot, String job){
         try{
             rw.writerJobInfo(serverRoot,job);
@@ -127,19 +134,6 @@ public class JobHealthReport {
         rw.writeReportRow(headerWithRowValue);
     }
 
-    private String encodeStringForUrl(String s){
-        try {
-            return URLEncoder.encode(s,"UTF-8").replace("+", "%20");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private String buildJobUrl(String serverRoot, String job){
-        return serverRoot + "/job/" + job + "/";
-    }
-
     private Integer getAverageFailedTest(){
         Integer sum = 0;
         Integer total = 0;
@@ -170,32 +164,21 @@ public class JobHealthReport {
             sum += Integer.parseInt(build.getDuration());
         }
         return sum / buildList.size();
-    }
+    }   
 
-    private void setColumnHeaderAndWidth(){
-        columnHeaderAndWidth.put(BUILD_COLUMN_HEADER, 0);
-        columnHeaderAndWidth.put(FAILED_TEST_HEADER, 0);
-        columnHeaderAndWidth.put(TOTAL_TEST_HEADER, 0);
-        columnHeaderAndWidth.put(DURATION_HEADER, 0);
-        columnHeaderAndWidth.put(DATE_HEADER, 16);
-    }
+	@Override
+	String getReportName() {
+		return "JobHealthReport";
+	}
 
-    private void parseArguments(String[] args){
-        CmdLineParser parser = new CmdLineParser(this);
-        try {
-            parser.parseArgument(args);
+	@Override
+	String getUsageMessage() {
+		return "Example: java " + getReportName() + " -url \"http://qatools02:8080\" "
+				+ "-job \"Default Trunk - D - Batch - Run 1\" -buildLimit 5";
+	}
 
-            if( args.length == 0 ){
-                throw new CmdLineException(parser,"No argument is given");
-            }
-        } catch( CmdLineException e ) {
-            System.err.println();
-            System.err.println(e.getMessage());
-            System.err.println("java JobHealthReport [options...] arguments...");
-            parser.printUsage(System.err);
-            System.err.println();
-            System.err.println("  Example: java JobHealthReport -url \"http://qatools02:8080\" -job \"Default Trunk - D - Batch - Run 1\" -buildLimit 5");
-            System.exit(1);
-        }
-    }
+	@Override
+	void tearDown() {
+		//No-op
+	}
 }
