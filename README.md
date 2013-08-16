@@ -11,7 +11,7 @@ Is it there now?  Absolutely not.  I have really only just begun work on this pr
 
 The idea formed from a need in my office to gather data regarding the acceptance test phase of our deployment pipeline.  Which we run entirely through Jenkins and in house deployment/automation tools.  The type of data intially sought were job durations, test failure counts, wait times with a goal of indentifing bottlenecks and troubled jobs(read: branches).  I started writing such reports and quickly tired of parsing the dom to find what I was looking for. 
 
-## Building with depdencies
+## Building with dependencies
 
 * mvn install
 
