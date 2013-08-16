@@ -39,6 +39,12 @@ JobHealthReport.bat -url `<url>` -job `<jobName>` -buildLimit `<maxBuildLimit>`
 
 ```
 
+BranchComparisonReport.bat -url `<url>` -baseJob `<jobName>` -testJob `<jobName>`
+
+```
+> BranchComparisonReport.bat -url "http://jenkinsci:8080" -baseJob "Default Trunk - F - Batch - Run 3" -testJob "August20Staging - F - Batch - Run 3"
+
+```
 
 ## Sample Report Output
 
@@ -66,3 +72,18 @@ Job:           Default Trunk - Run 1
 -----------------------------------------------------------------------------------------
     Avg             33                   2150              3 h 22 m            Avg
  ```        
+ 
+ 
+### BranchComparisonReport
+
+The BranchComparisonReport provides a list of test classes that are failing within the 'testJob' job that are not 
+failing within the 'baseJob' job. This would typically be used to compare a specific workstream to the default
+workstream to only provide those tests that are not failing globally.
+
+```
+
+Tests failing in 'August20Staging - F - Batch - Run 3' that are not failing in 'Default Trunk - F - Batch - Run 3':
+        tests.batchapp.thdso.thdsoPoSpecTest
+        tests.batchapp.thdso.thdsoConfirmSpecTest
+
+```
