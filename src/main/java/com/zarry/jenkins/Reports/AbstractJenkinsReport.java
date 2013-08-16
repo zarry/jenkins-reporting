@@ -12,7 +12,8 @@ import org.kohsuke.args4j.CmdLineParser;
 public abstract class AbstractJenkinsReport {
 
 	protected void runReport(String[] args){
-		parseArguments(args);
+		if(!parseArguments(args))
+			return;
 		setUp();
 		executeReport();
 		tearDown();
@@ -31,7 +32,7 @@ public abstract class AbstractJenkinsReport {
         return serverRoot + "/job/" + job + "/";
     }
     
-    protected void parseArguments(String[] args){
+    protected boolean parseArguments(String[] args){
         CmdLineParser parser = new CmdLineParser(this);
         try {
             parser.parseArgument(args);
@@ -45,8 +46,10 @@ public abstract class AbstractJenkinsReport {
             parser.printUsage(System.err);
             System.err.println();
             System.err.println(getUsageMessage());            
-            return;
+            return false;
         }
+        
+        return true;
     }
 		
     abstract String getReportName();

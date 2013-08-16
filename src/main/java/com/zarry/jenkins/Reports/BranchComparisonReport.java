@@ -68,7 +68,7 @@ public class BranchComparisonReport extends AbstractJenkinsReport {
 
         List<String> branchFailures = testFailedApi.getAllFailedTests();
 
-        System.out.println("Tests failing in '" + testJob + "' that are not failing in '" + baseJob + "':");
+        System.out.println("\n\nTests failing in '" + testJob + "' that are not failing in '" + baseJob + "':");
         for (String failure : branchFailures) {
             if (!baseFailures.contains(failure)) {
                 System.out.println("\t" + failure);
@@ -89,7 +89,7 @@ public class BranchComparisonReport extends AbstractJenkinsReport {
     @Override
     String getUsageMessage() {
         return "Example: java " + getReportName() + " -url \"http://qatools02:8080\" "
-            + "-baseJob \"Default Trunk - D - Batch - Run 1\" -testJob \"August20Staging - F - Batch - Run 3\"";
+            + "-baseJob \"Default Trunk - F - Batch - Run 3\" -testJob \"August20Staging - F - Batch - Run 3\"";
     }
 
     private class ParsedFailedApi extends JenkinsApi {
