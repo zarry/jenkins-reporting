@@ -12,7 +12,7 @@ import java.util.List;
  * Time: 1:45 PM
  */
 
-public class JenkinsBuildApi extends JenkinsApi implements Api {
+public class JenkinsBuildApi extends AbstractJenkinsApi implements Api {
     private Document dom;
     private String rootJobUrl;
     private String buildNumber;

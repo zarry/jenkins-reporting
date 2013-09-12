@@ -8,7 +8,7 @@ import org.dom4j.Document;
  * Time: 1:45 PM
  */
 
-public class JenkinsJobApi extends JenkinsApi implements Api {
+public class JenkinsJobApi extends AbstractJenkinsApi implements Api {
     private Document dom;
     private String rootJobUrl;
 

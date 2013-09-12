@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.zarry.jenkins.JenkinsApi;
+import com.zarry.jenkins.AbstractJenkinsApi;
 import com.zarry.jenkins.JenkinsJobApi;
 
 import org.dom4j.Document;
@@ -92,7 +92,7 @@ public class BranchComparisonReport extends AbstractJenkinsReport {
             + "-baseJob \"Default Trunk - F - Batch - Run 3\" -testJob \"August20Staging - F - Batch - Run 3\"";
     }
 
-    private class ParsedFailedApi extends JenkinsApi {
+    private class ParsedFailedApi extends AbstractJenkinsApi {
         private Document dom;
         private String rootJobUrl;
         private String buildNumber;
