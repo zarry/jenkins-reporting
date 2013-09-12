@@ -10,6 +10,7 @@ import java.net.URL;
  */
 public interface Api {
     static final String APIXML = "api/xml";
+    static final String TREE = "?&tree=";
 
     public Document getDom(URL url);
 
