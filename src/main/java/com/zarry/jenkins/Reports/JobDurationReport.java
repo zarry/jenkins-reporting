@@ -3,9 +3,7 @@ package com.zarry.jenkins.Reports;
 import com.zarry.jenkins.*;
 import org.kohsuke.args4j.Option;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
@@ -31,7 +29,7 @@ public class JobDurationReport extends AbstractJenkinsReport{
         }
     }
 
-    @Option(name ="-match",
+    @Option(name ="-regex",
             usage = "Regex to match jobs on CI.  Using this  will run the report against all jobs from CI that match given regex")
     private String regex;
 
@@ -60,9 +58,17 @@ public class JobDurationReport extends AbstractJenkinsReport{
     private void gatherData(String serverRoot){
         JenkinsRootApi rootApi = new JenkinsRootApi(serverRoot, ALL_JOBS_TREE_QUERY);
         ArrayList<String> jobs = rootApi.getAllJobNames();
+        ArrayList<String matchingJobs = new ArrayList<String>();
         for(String job : jobs){
-            System.out.println("Job => " + job);
+            if(job.matches(regex)){
+                System.out.println("Match => " + job);
+                matchingJobs.add(job);
+            }
         }
+
+       // Do Some More Stuff
+
+
 
     }
        
