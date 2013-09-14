@@ -17,19 +17,6 @@ public class JobDurationReport extends AbstractJenkinsReport{
     @Option(name="-url",usage="URL root to Jenkins CI Server")
     private String serverRoot;
 
-    @Option(name="-buildLimit",usage="Number of builds to gather data for.")
-    private int buildLimit;
-
-    private LinkedHashSet<String> jobs = new LinkedHashSet<String>();
-    @Option(name = "-job", metaVar = "\"job1,job2,jobN\"",
-            usage = "CI Job(s) to generate report for. Comma delimited for multiple jobs")
-    private void setJobs(final String job){
-        String[] alljobs = job.split(",");
-        for(String aJob : alljobs){
-            jobs.add(aJob);
-        }
-    }
-
     @Option(name ="-regex",
             usage = "Regex to match jobs on CI.  Using this  will run the report against all jobs from CI that match given regex")
     private String regex;
@@ -102,11 +89,9 @@ public class JobDurationReport extends AbstractJenkinsReport{
     private void writeReport(HashMap<String, String> jobAndDuration){
         try{
             rw.writeGenericHeader(columnHeaderAndWidth);
-
             for(String job : jobAndDuration.keySet()){
                 writeRow(job, jobAndDuration.get(job));
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,7 +112,7 @@ public class JobDurationReport extends AbstractJenkinsReport{
 	@Override
 	String getUsageMessage() {
 		return "Example: java " + getReportName() + " -url \"http://qatools02:8080\" "
-				+ "-job \"Default Trunk - D - Batch - Run 1\" -buildLimit 5";
+				+ "-regex \".*VM Reserve.*\"";
 	}
 
 	@Override
