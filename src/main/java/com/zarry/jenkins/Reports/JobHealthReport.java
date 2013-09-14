@@ -126,45 +126,16 @@ public class JobHealthReport extends AbstractJenkinsReport{
         LinkedHashMap<String,String> headerWithRowValue = new LinkedHashMap<String, String>();
 
         headerWithRowValue.put(BUILD_COLUMN_HEADER, "Avg");
-        headerWithRowValue.put(FAILED_TEST_HEADER, getAverageFailedTest().toString());
-        headerWithRowValue.put(TOTAL_TEST_HEADER, getAverageTotalTest().toString());
-        headerWithRowValue.put(DURATION_HEADER, rw.convertMilliSecToReadable(getAverageDuration().toString()));
+        headerWithRowValue.put(FAILED_TEST_HEADER, rw.getAverageFailedTest(buildList).toString());
+        headerWithRowValue.put(TOTAL_TEST_HEADER, rw.getAverageTotalTest(buildList).toString());
+        headerWithRowValue.put(DURATION_HEADER, rw.convertMilliSecToReadable(rw.getAverageDuration(buildList).toString()));
         headerWithRowValue.put(DATE_HEADER, "Avg");
 
         rw.writeReportRow(headerWithRowValue);
     }
 
-    private Integer getAverageFailedTest(){
-        Integer sum = 0;
-        Integer total = 0;
-        for (JenkinsBuildBean build : buildList){
-            if("-" != build.getFailedTestCount()){
-                sum += Integer.parseInt(build.getFailedTestCount());
-                total++;
-            }
-        }
-        return sum / total;
-    }
 
-    private Integer getAverageTotalTest(){
-        Integer sum = 0;
-        Integer total = 0;
-        for (JenkinsBuildBean build : buildList){
-            if("-" != build.getTotalTestCount()){
-                sum += Integer.parseInt(build.getTotalTestCount());
-                total++;
-            }
-        }
-        return sum / total;
-    }
 
-    private Long getAverageDuration(){
-        long sum = 0;
-        for (JenkinsBuildBean build : buildList){
-            sum += Integer.parseInt(build.getDuration());
-        }
-        return sum / buildList.size();
-    }   
 
 	@Override
 	String getReportName() {

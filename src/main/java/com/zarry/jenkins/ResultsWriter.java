@@ -140,4 +140,41 @@ public class ResultsWriter {
         return new java.util.Date(Long.parseLong(epochTime));
     }
 
+    public Long getAverageDuration(ArrayList<JenkinsBuildBean> buildList){
+        long sum = 0;
+        for (JenkinsBuildBean build : buildList){
+            sum += Integer.parseInt(build.getDuration());
+        }
+
+        if(0 == buildList.size()){
+            return (long)0;
+        }
+        return sum / buildList.size();
+    }
+
+    public Integer getAverageTotalTest(ArrayList<JenkinsBuildBean> buildList){
+        Integer sum = 0;
+        Integer total = 0;
+        for (JenkinsBuildBean build : buildList){
+            if("-" != build.getTotalTestCount()){
+                sum += Integer.parseInt(build.getTotalTestCount());
+                total++;
+            }
+        }
+        return sum / total;
+    }
+
+    public Integer getAverageFailedTest(ArrayList<JenkinsBuildBean> buildList){
+        Integer sum = 0;
+        Integer total = 0;
+        for (JenkinsBuildBean build : buildList){
+            if("-" != build.getFailedTestCount()){
+                sum += Integer.parseInt(build.getFailedTestCount());
+                total++;
+            }
+        }
+        return sum / total;
+    }
+
+
 }

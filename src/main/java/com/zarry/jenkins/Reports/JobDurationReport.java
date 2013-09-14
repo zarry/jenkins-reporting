@@ -41,6 +41,7 @@ public class JobDurationReport extends AbstractJenkinsReport{
     private static final String ALL_JOBS_TREE_QUERY = "jobs[name]";
     private static final String ALL_BUILDS_TREE_QUERY = "builds[number,status,timestamp,id,duration,result]";
     private LinkedHashMap<String, Integer> columnHeaderAndWidth = new LinkedHashMap<String, Integer>();
+    private HashMap<String, String> jobAvgDuration = new HashMap<String, String>();
 
 
     public static void main(String[] args){
@@ -49,55 +50,78 @@ public class JobDurationReport extends AbstractJenkinsReport{
     
     @Override
 	void setUp() {
+        setColumnHeaderAndWidth();
+
 	}
-    
+
+    private void setColumnHeaderAndWidth(){
+        columnHeaderAndWidth.put(JOB_HEADER, 62);
+        columnHeaderAndWidth.put(DURATION_HEADER, 0);
+    }
+
+
     @Override
 	void executeReport() {
-
             gatherData(serverRoot);
+            writeReport(jobAvgDuration);
 	}
 
     private void gatherData(String serverRoot){
         JenkinsRootApi rootApi = new JenkinsRootApi(serverRoot, ALL_JOBS_TREE_QUERY);
         ArrayList<String> jobs = rootApi.getAllJobNames();
         ArrayList<String> matchingJobs = new ArrayList<String>();
+        HashMap<String, ArrayList<JenkinsBuildBean>> jobsAndBuilds = new HashMap<String, ArrayList<JenkinsBuildBean>>();
+
         for(String job : jobs){
             if(job.matches(regex)){
-                System.out.println("Match => " + job);
                 matchingJobs.add(job);
             }
         }
-        HashMap<String, ArrayList<JenkinsBuildBean>> jobsAndBuilds = new HashMap<String, ArrayList<JenkinsBuildBean>>();
 
         for(String matchingJob : matchingJobs){
-            JenkinsJobApi jobApi = new JenkinsJobApi(buildJobUrl(serverRoot, matchingJobs.get(5)), ALL_BUILDS_TREE_QUERY);
+            JenkinsJobApi jobApi = new JenkinsJobApi(buildJobUrl(serverRoot, matchingJob), ALL_BUILDS_TREE_QUERY);
             LinkedHashMap<String, HashMap<String, String>> builds = jobApi.getAllBuildsForJob();
             ArrayList<JenkinsBuildBean> allBuilds = new ArrayList<JenkinsBuildBean>();
             for(String key : builds.keySet()){
                 HashMap<String, String> buildInfo = builds.get(key);
                 JenkinsBuildBean build = new JenkinsBuildBean();
-                //System.out.println("Number: " + buildInfo.get("number") + "Timestamp: " + buildInfo.get("timestamp") );
                 build.setDuration(buildInfo.get("duration"));
                 build.setNumber(buildInfo.get("number"));
                 allBuilds.add(build);
             }
             jobsAndBuilds.put(matchingJob,allBuilds);
+
+            // Calculate avg duration per job
+            jobAvgDuration.put(matchingJob,rw.getAverageDuration(allBuilds).toString());
         }
-
-        System.out.println("Testing => " + jobsAndBuilds.get("Default Trunk - A - VM Reserve").get(2).getNumber());
-
     }
 
 
+    private void writeReport(HashMap<String, String> jobAndDuration){
+        try{
+            rw.writeGenericHeader(columnHeaderAndWidth);
 
+            for(String job : jobAndDuration.keySet()){
+                writeRow(job,jobAndDuration.get(job));
+            }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-    private void writeReport(){}
+    private void writeRow(String job, String duration){
+        LinkedHashMap<String,String> headerWithRowValue = new LinkedHashMap<String, String>();
 
+        headerWithRowValue.put(JOB_HEADER, job);
+        headerWithRowValue.put(DURATION_HEADER, rw.convertMilliSecToReadable(duration));
+
+        rw.writeReportRow(headerWithRowValue);
+    }
 
 	@Override
 	String getReportName() {
-		return "JobHealthReport";
+		return "JobDurationReport";
 	}
 
 	@Override
