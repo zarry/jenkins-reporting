@@ -89,15 +89,15 @@ A report to match all jobs based on regex provided and calculate average duratio
 
 |                             Job                             |  Avg Duration  |
 +-------------------------------------------------------------+----------------+
-                jump_box_build - A - VM Reserve                     1 h 8 m     
-      DSP-48_Order_Detail_Performance_Build - A VM Reserve          3 h 44 m    
+                Build - A - VM Reserve                              1 h 8 m     
+                Performance_Build - A VM Reserve                    3 h 44 m    
                  Default Trunk - A - VM Reserve                     2 h 52 m    
-                   PK Cache - A - VM Reserve                        3 h 5 m     
+                   Cache - A - VM Reserve                           3 h 5 m     
               Testcase_Stability - A - VM Reserve                   1 h 3 m     
                 Maintenance - A - VM Reserve                        3 h 13 m    
              Locator-enhancements - A - VM Reserve                  0 h 12 m    
             WebDM_LineItemDataType - A - VM Reserve                 7 h 45 m    
-      THDSO_Remove_Tax_from_Invoice_Pages - A - VM Reserve          0 h 0 m     
+             RemoveInvoicePage - A - VM Reserve                     0 h 0 m     
               Maintenance_Weekly - A - VM Reserve                   0 h 54 m    
                  Offshore Team - A - VM Reserve                     1 h 5 m     
             QA_Sandbox_Conversions - A - VM Reserve                 1 h 9 m     
