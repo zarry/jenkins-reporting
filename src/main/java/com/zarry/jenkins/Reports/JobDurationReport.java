@@ -29,6 +29,7 @@ public class JobDurationReport extends AbstractJenkinsReport{
     private static final String ALL_BUILDS_TREE_QUERY = "builds[number,status,timestamp,id,duration,result]";
     private LinkedHashMap<String, Integer> columnHeaderAndWidth = new LinkedHashMap<String, Integer>();
     private HashMap<String, String> jobAvgDuration = new HashMap<String, String>();
+    private String totalDuration;
 
 
     public static void main(String[] args){
@@ -62,6 +63,9 @@ public class JobDurationReport extends AbstractJenkinsReport{
             jobsAndBuilds.put(matchingJob, populateAllBuildsForJob(jobApi.getAllBuildsForJob()));
             jobAvgDuration.put(matchingJob, rw.getAverageDuration(populateAllBuildsForJob(jobApi.getAllBuildsForJob())).toString());
         }
+
+        totalDuration = rw.getAverageDurationForAllJobsAndBuilds(jobsAndBuilds).toString();
+
     }
 
     private ArrayList<String> getMatchingJobs(ArrayList<String> jobs){
@@ -92,6 +96,8 @@ public class JobDurationReport extends AbstractJenkinsReport{
             for(String job : jobAndDuration.keySet()){
                 writeRow(job, jobAndDuration.get(job));
             }
+            rw.writeLineBreak("-");
+            writeAverageRow();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,6 +107,15 @@ public class JobDurationReport extends AbstractJenkinsReport{
         LinkedHashMap<String,String> headerWithRowValue = new LinkedHashMap<String, String>();
         headerWithRowValue.put(JOB_HEADER, job);
         headerWithRowValue.put(DURATION_HEADER, rw.convertMilliSecToReadable(duration));
+        rw.writeReportRow(headerWithRowValue);
+    }
+
+    private void writeAverageRow(){
+        LinkedHashMap<String,String> headerWithRowValue = new LinkedHashMap<String, String>();
+
+        headerWithRowValue.put(JOB_HEADER, "All Jobs and Builds Average Duration");
+        headerWithRowValue.put(DURATION_HEADER, rw.convertMilliSecToReadable(totalDuration));
+
         rw.writeReportRow(headerWithRowValue);
     }
 

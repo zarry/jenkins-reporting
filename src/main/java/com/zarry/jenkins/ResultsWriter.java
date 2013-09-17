@@ -176,5 +176,19 @@ public class ResultsWriter {
         return sum / total;
     }
 
+    public Long getAverageDurationForAllJobsAndBuilds(HashMap<String, ArrayList<JenkinsBuildBean>> allJobsAndBuilds){
+        long sum = 0;
+        long totalListSize = 0;
+        for(String job : allJobsAndBuilds.keySet()){
+            ArrayList<JenkinsBuildBean> buildList = allJobsAndBuilds.get(job);
+            for (JenkinsBuildBean build : buildList){
+                sum += Integer.parseInt(build.getDuration());
+            }
+            totalListSize += buildList.size();
+        }
+
+        return sum / totalListSize;
+    }
+
 
 }
