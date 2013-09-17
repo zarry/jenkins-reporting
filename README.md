@@ -43,7 +43,7 @@ JobDurationReport.bat -url `<url>` -regex `<regex>`
 
 
 ```
-> JobHealthReport.bat -url "http://jenkinsci:8080" -job ".*VM Reserve.*" -buildLimit 10
+> JobDurationReport.bat -url "http://jenkinsci:8080" -job ".*VM Reserve.*" 
 
 ```
 
