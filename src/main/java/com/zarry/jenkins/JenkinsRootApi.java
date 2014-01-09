@@ -47,6 +47,41 @@ public class JenkinsRootApi extends AbstractJenkinsApi implements Api {
         return jobs;
     }
 
+   /*  Custom method to return job and timestamp of all jobs
+    *  Used with custom tree query -> "jobs[name,lastBuild[number,duration,timestamp]"
+    *  XML looks something like this...
+    *  <br/><br/>
+    *  ...
+    *  <job>
+    *  <name>2013_ATS_Improvements - D - Batch - Run 1</name>
+    *  <lastBuild>
+    *  <duration>1393083</duration>
+    *  <number>3</number>
+    *  <result>UNSTABLE</result>
+    *  <timestamp>1384187053000</timestamp>
+    *  </lastBuild>
+    *  </job>
+    *  ...
+    */
+    public HashMap<String, String> getAllJobsAndLastTimeStamp(){
+        List<Element> nodes = dom.getRootElement().elements("job");
+        HashMap<String, String> jobsAndLastBuild = new HashMap<String, String>();
+
+        for(Element node : nodes){
+            if(node.element("lastBuild") == null){
+                jobsAndLastBuild.put(
+                        node.elementText("name"),
+                        "0");
+            }else{
+                jobsAndLastBuild.put(
+                        node.elementText("name"),
+                        node.element("lastBuild").elementText("timestamp"));
+            }
+
+        }
+        return jobsAndLastBuild;
+    }
+
     private String getElementOffRoot(String element){
         return dom.getRootElement().elementText(element);
     }
