@@ -1,13 +1,13 @@
 jenkins-reporting
 =================
 
-A simple java framework for writing reports against the Jenkins API
+A simple java framework for writing text and console reports against the Jenkins API
 
 ## The Goal
 
 Eventually provide a pretty extendable framework for generating reports based on data gathered from the jenkins api.  
 
-Is it there now?  Absolutely not.  I have really only just begun work on this project.  
+Is it there now?  Absolutely not.  
 
 The idea formed from a need in my office to gather data regarding the acceptance test phase of our deployment pipeline.  Which we run entirely through Jenkins and in house deployment/automation tools.  The type of data intially sought were job durations, test failure counts, wait times with a goal of indentifing bottlenecks and troubled jobs(read: branches).  I started writing such reports and quickly tired of parsing the dom to find what I was looking for. 
 
@@ -22,7 +22,7 @@ Write Everything...
 To be just a tiny bit more specific.
 
 * Documentation
-* ReportWriter needs to be (re)written.  
+* ReportWriter do something with this...   
 * More access to the API
 * More pre-made/sample reports
 * ???
