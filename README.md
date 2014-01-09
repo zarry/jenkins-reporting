@@ -47,7 +47,17 @@ JobDurationReport.bat -url `<url>` -regex `<regex>`
 
 ```
 
+DormantJobsPendingRemoval.bat -url `<url>` -regex `<regex>` -days `<days>`
+
+
+```
+> DormantJobsPendingRemoval.bat -url "http://jenkinsci:8080" -regex ".*Setup.*" -days 30 
+
+```
+
+
 BranchComparisonReport.bat -url `<url>` -baseJob `<jobName>` -testJob `<jobName>`
+
 
 ```
 > BranchComparisonReport.bat -url "http://jenkinsci:8080" -baseJob "Default Trunk - Run 1" -testJob "AugustStaging - Run 1"
@@ -104,6 +114,25 @@ A report to match all jobs based on regex provided and calculate average duratio
 ---------------------------------------------------------------------------------
               All Jobs and Builds Average Duration                  1 h 23 m    
 
+
+```
+
+### DormantJobsPendingRemoval
+
+A report that will find all jobs matching a regex that have not been executed within X days from the current date.  X being the number of days provided via command line.  If a job has never run the starting epoch time of 1970 will be used.
+
+```
+
+|                    Jobs Pending Removal                    |      Last Executed      |
++------------------------------------------------------------+-------------------------+
+                batchCodeCoverage - B - Setup                    11/29/2013 12:03 PM   
+                Sales_Division - B - Setup                       12/10/2013 03:26 AM   
+              Upgrade_Server2003 - B - Setup                     12/31/1969 19:00 PM   
+                     atsFAfix - B - Setup                        11/12/2013 14:40 PM   
+                   MESS - Daisy - B - Setup                      12/31/1969 19:00 PM   
+              WebDM_LineItemDataType - B - Setup                 09/23/2013 12:57 PM   
+               order_acceptance_bit - B - Setup                  10/29/2013 15:43 PM   
+              2013_ATS_Improvements - B - Setup                  11/11/2013 10:56 AM   
 
 ```
 
