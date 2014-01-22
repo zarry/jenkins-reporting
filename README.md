@@ -47,11 +47,11 @@ JobDurationReport.bat -url `<url>` -regex `<regex>`
 
 ```
 
-DormantJobsPendingRemoval.bat -url `<url>` -regex `<regex>` -days `<days>`
+DormantJobsPendingRemoval.bat -url `<url>` -regex `<regex>` -days `<days>` -excludeNeverRun
 
 
 ```
-> DormantJobsPendingRemoval.bat -url "http://jenkinsci:8080" -regex ".*Setup.*" -days 30 
+> DormantJobsPendingRemoval.bat -url "http://jenkinsci:8080" -regex ".*Setup.*" -days 30 -excludeNeverRun
 
 ```
 
