@@ -47,11 +47,11 @@ JobDurationReport.bat -url `<url>` -regex `<regex>`
 
 ```
 
-DormantJobsPendingRemoval.bat -url `<url>` -regex `<regex>` -days `<days>` -excludeNeverRun
+DormantJobsPendingRemoval.bat -url `<url>` -regex `<regex>` -days `<days>` -includeNeverRun
 
 
 ```
-> DormantJobsPendingRemoval.bat -url "http://jenkinsci:8080" -regex ".*Setup.*" -days 30 -excludeNeverRun
+> DormantJobsPendingRemoval.bat -url "http://jenkinsci:8080" -regex ".*Setup.*" -days 30 -includeNeverRun
 
 ```
 
@@ -119,7 +119,7 @@ A report to match all jobs based on regex provided and calculate average duratio
 
 ### DormantJobsPendingRemoval
 
-A report that will find all jobs matching a regex that have not been executed within X days from the current date.  X being the number of days provided via command line.  If a job has never run the starting epoch time of 1970 will be used.
+A report that will find all jobs matching a regex that have not been executed within X days from the current date.  X being the number of days provided via command line.  If a job has never run the starting epoch time of 1970 will be used.  BY default these jobs are excluded from the list.  There is a flag to enable.
 
 ```
 
