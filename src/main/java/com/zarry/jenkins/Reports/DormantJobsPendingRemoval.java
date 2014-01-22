@@ -22,9 +22,9 @@ public class DormantJobsPendingRemoval extends AbstractJenkinsReport {
             usage = "Consective days inactive that would trigger a job as being dormant or inactive.  ")
     private int days;
 
-    @Option(name ="-excludeNeverRun",
-            usage = "Boolean to exclude jobs which have never been run once.  This is common to avoid template jobs or newly created jobs.")
-    private boolean excludeNeverRun=false;
+    @Option(name ="-includeNeverRun",
+            usage = "Boolean to include jobs which have never been run once.  This is used to show template jobs or newly created jobs.")
+    private boolean includeNeverRun=false;
 
 
     static ResultsWriter rw = new ResultsWriter();
@@ -70,7 +70,7 @@ public class DormantJobsPendingRemoval extends AbstractJenkinsReport {
         try{
             rw.writeGenericHeader(columnHeaderAndWidth);
             for(String job : matchingJobsAndInfo.keySet()){
-                if(excludeNeverRun && "0".equals(matchingJobsAndInfo.get(job))){
+                if(!includeNeverRun && "0".equals(matchingJobsAndInfo.get(job))){
                     //No-op
                 }else{
                     writeRow(job,  matchingJobsAndInfo.get(job));
